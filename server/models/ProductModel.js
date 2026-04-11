@@ -18,6 +18,14 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide product category'],
   },
+  measurement: {
+    type: String,
+  },
+  storeType: {
+    type: String,
+    enum: ['indianmart', 'grocery'],
+    default: 'indianmart',
+  },
   stock: {
     type: Number,
     required: [true, 'Please provide product stock'],

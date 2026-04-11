@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   // Product Form State
   const [showProductModal, setShowProductModal] = useState(false);
   const [productForm, setProductForm] = useState({
-    name: '', price: '', description: '', category: '', stock: '', expiryDate: ''
+    name: '', price: '', description: '', category: '', stock: '', expiryDate: '', measurement: '', storeType: 'indianmart'
   });
   const [productImage, setProductImage] = useState(null);
   const [editingId, setEditingId] = useState(null);
@@ -87,14 +87,14 @@ const AdminDashboard = () => {
   const handleEditProduct = (p) => {
     setProductForm({
       name: p.name, price: p.price, description: p.description, category: p.category, stock: p.stock,
-      expiryDate: p.expiryDate ? new Date(p.expiryDate).toISOString().split('T')[0] : ''
+      expiryDate: p.expiryDate ? new Date(p.expiryDate).toISOString().split('T')[0] : '', measurement: p.measurement || '', storeType: p.storeType || 'indianmart'
     });
     setEditingId(p._id);
     setShowProductModal(true);
   };
 
   const resetProductForm = () => {
-    setProductForm({ name: '', price: '', description: '', category: '', stock: '', expiryDate: '' });
+    setProductForm({ name: '', price: '', description: '', category: '', stock: '', expiryDate: '', measurement: '', storeType: 'indianmart' });
     setProductImage(null);
     setEditingId(null);
   };
@@ -229,22 +229,41 @@ const AdminDashboard = () => {
                 <label className="block text-sm text-gray-600 mb-1">Name</label>
                 <input required type="text" value={productForm.name} onChange={e => setProductForm({...productForm, name: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
               </div>
-              <div className="flex space-x-4">
-                <div className="w-1/2">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div className="w-full md:w-1/2">
                   <label className="block text-sm text-gray-600 mb-1">Price (₹)</label>
                   <input required type="number" value={productForm.price} onChange={e => setProductForm({...productForm, price: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full md:w-1/2">
                   <label className="block text-sm text-gray-600 mb-1">Stock</label>
                   <input required type="number" value={productForm.stock} onChange={e => setProductForm({...productForm, stock: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
                 </div>
               </div>
-              <div className="flex space-x-4">
-                <div className="w-1/2">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div className="w-full md:w-1/2">
                   <label className="block text-sm text-gray-600 mb-1">Category</label>
                   <input required type="text" value={productForm.category} onChange={e => setProductForm({...productForm, category: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full md:w-1/2">
+                  <label className="block text-sm text-gray-600 mb-1">Measurable Quantity (e.g. 500g)</label>
+                  <input type="text" value={productForm.measurement} onChange={e => setProductForm({...productForm, measurement: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div className="w-full md:w-1/2">
+                  <label className="block text-sm text-gray-600 mb-1">Store Type</label>
+                  <div className="flex items-center space-x-4 mt-2">
+                    <label className="flex items-center">
+                      <input type="radio" value="indianmart" checked={productForm.storeType === 'indianmart'} onChange={e => setProductForm({...productForm, storeType: e.target.value})} className="mr-2" />
+                      IndianMart
+                    </label>
+                    <label className="flex items-center">
+                      <input type="radio" value="grocery" checked={productForm.storeType === 'grocery'} onChange={e => setProductForm({...productForm, storeType: e.target.value})} className="mr-2" />
+                      Grocery
+                    </label>
+                  </div>
+                </div>
+                <div className="w-full md:w-1/2">
                   <label className="block text-sm text-gray-600 mb-1">Expiry Date (Optional)</label>
                   <input type="date" value={productForm.expiryDate} onChange={e => setProductForm({...productForm, expiryDate: e.target.value})} className="w-full border rounded p-2 focus:outline-none focus:border-primary" />
                 </div>

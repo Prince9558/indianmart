@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
+import { useGoogleLogin } from '@react-oauth/google';
+import { FcGoogle } from 'react-icons/fc';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { register, user } = useContext(AuthContext);
+  const { register, googleLogin, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +17,20 @@ const Register = () => {
       navigate('/');
     }
   }, [user, navigate]);
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        await googleLogin(tokenResponse.access_token);
+        toast.success('Logged in successfully with Google');
+      } catch (error) {
+        toast.error(error.response?.data?.error || 'Google login failed');
+      }
+    },
+    onError: () => {
+      toast.error('Google login failed');
+    }
+  });
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -88,6 +104,19 @@ const Register = () => {
             
             <button type="submit" className="w-full bg-secondary text-white py-3 font-bold rounded-sm shadow-md mt-6 hover:bg-yellow-600 transition">
               CONTINUE
+            </button>
+            <div className="relative flex py-2 items-center">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="flex-shrink-0 mx-4 text-gray-500 text-sm">OR</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+            <button
+              type="button"
+              onClick={() => loginWithGoogle()}
+              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-3 font-medium rounded-sm shadow-sm hover:bg-gray-50 transition"
+            >
+              <FcGoogle className="text-xl" />
+              Sign up with Google
             </button>
           </form>
           

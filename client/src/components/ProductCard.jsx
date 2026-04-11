@@ -13,13 +13,21 @@ const ProductCard = ({ product }) => {
           />
         </div>
         <div className="flex-grow flex flex-col justify-end text-center">
-          <h2 className="text-sm font-medium text-gray-800 line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+          <h2 className="text-sm font-medium text-gray-800 line-clamp-2 mb-1 group-hover:text-primary transition-colors">
             {product.name}
           </h2>
-          <div className="text-gray-500 text-xs mb-1">{product.category}</div>
-          <div className="text-lg font-bold text-gray-900">
+          <div className="text-gray-500 text-xs mb-1">
+            {product.category} {product.measurement && `• ${product.measurement}`}
+          </div>
+          <div className="text-lg font-bold text-gray-900 mb-1">
             ₹{product.price}
           </div>
+          {product.stock > 0 && product.stock <= 5 && (
+            <div className="text-xs font-semibold text-red-500">Only {product.stock} left!</div>
+          )}
+          {product.stock === 0 && (
+            <div className="text-xs font-semibold text-gray-400">Out of Stock</div>
+          )}
         </div>
       </div>
     </Link>

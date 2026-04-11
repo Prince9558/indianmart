@@ -62,7 +62,9 @@ const ProductDetails = () => {
       </div>
       
       <div className="md:w-3/5 p-6 md:p-8">
-        <h1 className="text-2xl font-medium text-gray-800 mb-2">{product.name}</h1>
+        <h1 className="text-2xl font-medium text-gray-800 mb-2">
+          {product.name} {product.measurement && <span className="text-lg text-gray-500 ml-2">({product.measurement})</span>}
+        </h1>
         <p className="text-sm text-gray-500 mb-4">{product.category}</p>
         <div className="text-3xl font-bold text-gray-900 mb-6">₹{product.price}</div>
         
@@ -73,8 +75,10 @@ const ProductDetails = () => {
         
         <div className="flex items-center space-x-2">
           <span className="font-medium text-gray-900">Availability:</span>
-          {product.stock > 0 ? (
-            <span className="text-green-600 font-medium">In Stock ({product.stock} available)</span>
+          {product.stock > 5 ? (
+            <span className="text-green-600 font-medium">In Stock</span>
+          ) : product.stock > 0 ? (
+            <span className="text-red-500 font-medium">Only {product.stock} items left!</span>
           ) : (
             <span className="text-red-500 font-medium">Out of Stock</span>
           )}

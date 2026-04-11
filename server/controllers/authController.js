@@ -59,6 +59,45 @@ export const logoutUser = (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
+export const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    // Fetch user info from Google
+    const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    if (!googleRes.ok) {
+      return res.status(401).json({ error: 'Failed to authenticate with Google' });
+    }
+    
+    const googleData = await googleRes.json();
+    const { email, name } = googleData;
+    
+    let user = await User.findOne({ email });
+    
+    if (!user) {
+      // Create user if they don't exist
+      const isFirstAccount = (await User.countDocuments({})) === 0;
+      const role = isFirstAccount ? 'admin' : 'user';
+      // Mongoose password requires minlength: 6, so we generate a random one
+      const tempPassword = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10);
+      user = await User.create({ name, email, password: tempPassword, role });
+    }
+
+    generateToken(res, user._id);
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
